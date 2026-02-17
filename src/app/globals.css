@@ -1,0 +1,69 @@
+/* Import Japanese Font */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Zen Maru Gothic", sans-serif;
+    --color-glass-border: rgba(255, 255, 255, 0.1);
+    --color-glass-bg: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background: #05050a;
+
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fullscreen Background Image Container */
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.6) blur(2px);
+}
+
+@utility glass {
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+@utility glass-card {
+    background: rgba(30, 30, 40, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: all 0.3s ease;
+}
+
+@utility text-glow {
+    text-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
