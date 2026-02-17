@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     try {
-        const { keyword, character, count } = await req.json();
+        const { keyword, character, count, category = 'anime' } = await req.json();
 
         if (!keyword) {
             return NextResponse.json(
@@ -13,23 +13,38 @@ export async function POST(req: Request) {
             );
         }
 
+        let context = "";
+        switch (category) {
+            case 'great_person':
+                context = "Search for quotes by **historical figures, celebrities, or philosophers**.";
+                break;
+            case 'movie':
+                context = "Search for quotes from **movies or cinema**.";
+                break;
+            case 'anime':
+            default:
+                context = "Search for quotes from **anime**.";
+                break;
+        }
+
         const prompt = `
-      You are an anime quote finder for a Japanese audience.
+      You are a quote finder for a Japanese audience.
+      Target Category: ${context}
       The user has provided the following keyword: "${keyword}".
-      ${character ? `The user also specified the character: "${character}".` : ""}
+      ${character ? `The user also specified the speaker/character: "${character}".` : ""}
 
       **Task:**
-      Find ${count || 3} anime quotes that match the provided keyword.
-      - If the keyword is an **Anime Title** (e.g. "NARUTO"), find quotes from that anime.
-      - If the keyword is a **Mood, Emotion, or Situation** (e.g. "passionate", "sad", "when you want to give up"), find quotes from *various* anime that match that vibe.
-      ${character ? `- Since a character was specified, strictly find quotes by "${character}" that match the keyword/anime.` : ""}
+      Find ${count || 3} quotes that match the provided keyword within the target category.
+      - If the keyword is a **Title/Name** (e.g. "Steve Jobs", "Titanic"), find quotes from that source.
+      - If the keyword is a **Mood, Emotion, or Situation** (e.g. "passionate", "business", "romance"), find quotes that match that vibe.
+      ${character ? `- Strictly find quotes by "${character}".` : ""}
       
       **IMPORTANT rules:**
       1.  **Language**: The quote text MUST be in **Japanese** (original Japanese text).
       2.  **Output**: Return ONLY a JSON array of objects with the following keys:
           - quote: The quote text in Japanese.
-          - character: The character who said it (in Japanese).
-          - anime: The anime title (in Japanese).
+          - character: The speaker/character name (in Japanese).
+          - anime: The source title (Anime name, Movie title, or specific context for great figures if applicable, otherwise just '偉人' or the specific affiliation).
       
       Do not include any markdown formatting like \`\`\`json. Just the raw JSON array.
     `;

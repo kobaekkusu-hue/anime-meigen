@@ -4,8 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Search, Sparkles } from "lucide-react";
 
+type Category = 'anime' | 'great_person' | 'movie';
+
 interface SearchFormProps {
-    onSearch: (data: { keyword: string; characterName: string; count: number }) => void;
+    onSearch: (data: { keyword: string; characterName: string; count: number; category: Category }) => void;
     isLoading: boolean;
 }
 
@@ -13,11 +15,20 @@ export default function SearchForm({ onSearch, isLoading }: SearchFormProps) {
     const [keyword, setKeyword] = useState("");
     const [characterName, setCharacterName] = useState("");
     const [count, setCount] = useState(3);
+    const [category, setCategory] = useState<Category>('anime');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (keyword.trim()) {
-            onSearch({ keyword, characterName, count });
+            onSearch({ keyword, characterName, count, category });
+        }
+    };
+
+    const getPlaceholder = () => {
+        switch (category) {
+            case 'anime': return "例: NARUTO, 熱い言葉, 泣ける...";
+            case 'great_person': return "例: スティーブ・ジョブズ, 成功, 失敗...";
+            case 'movie': return "例: ショーシャンクの空に, 愛, 勇気...";
         }
     };
 
@@ -31,6 +42,27 @@ export default function SearchForm({ onSearch, isLoading }: SearchFormProps) {
         >
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50" />
 
+            {/* Category Selector */}
+            <div className="flex justify-center gap-2 md:gap-4">
+                {[
+                    { id: 'anime', label: 'アニメ' },
+                    { id: 'great_person', label: '偉人' },
+                    { id: 'movie', label: '映画' },
+                ].map((cat) => (
+                    <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setCategory(cat.id as Category)}
+                        className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${category === cat.id
+                                ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30'
+                                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                            }`}
+                    >
+                        {cat.label}
+                    </button>
+                ))}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3 group">
                     <label className="text-sm text-gray-300 font-medium ml-1 tracking-wide">キーワード (作品名・感情・シチュエーション)</label>
@@ -40,7 +72,7 @@ export default function SearchForm({ onSearch, isLoading }: SearchFormProps) {
                             type="text"
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
-                            placeholder="例: NARUTO, 熱い言葉, 泣ける..."
+                            placeholder={getPlaceholder()}
                             className="w-full bg-transparent py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none transition-all"
                             required
                         />
@@ -48,7 +80,7 @@ export default function SearchForm({ onSearch, isLoading }: SearchFormProps) {
                 </div>
 
                 <div className="space-y-3 group">
-                    <label className="text-sm text-gray-300 font-medium ml-1 tracking-wide">キャラクター名 (任意)</label>
+                    <label className="text-sm text-gray-300 font-medium ml-1 tracking-wide">誰の言葉？ (任意)</label>
                     <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 focus-within:border-pink-500/50 transition-colors duration-300">
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400 group-focus-within:text-pink-400 transition-colors">
                             @
@@ -57,7 +89,7 @@ export default function SearchForm({ onSearch, isLoading }: SearchFormProps) {
                             type="text"
                             value={characterName}
                             onChange={(e) => setCharacterName(e.target.value)}
-                            placeholder="例: うずまきナルト"
+                            placeholder={category === 'anime' ? "例: うずまきナルト" : "例: 人物名・役名"}
                             className="w-full bg-transparent py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none transition-all"
                             required={false}
                         />

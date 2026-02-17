@@ -19,7 +19,7 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const handleSearch = async (data: { keyword: string; characterName: string; count: number }) => {
+    const handleSearch = async (data: { keyword: string; characterName: string; count: number; category: string }) => {
         setIsLoading(true);
         setError("");
         setQuotes([]);
@@ -34,6 +34,7 @@ export default function Home() {
                     keyword: data.keyword,
                     character: data.characterName,
                     count: data.count,
+                    category: data.category,
                 }),
             });
 
@@ -75,7 +76,7 @@ export default function Home() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-gray-400 mb-8 text-glow tracking-tighter"
                     >
-                        アニメ名言<br className="md:hidden" />サーチ
+                        完全名言<br className="md:hidden" />サーチ
                     </motion.h1>
 
                     <motion.p
@@ -84,8 +85,9 @@ export default function Home() {
                         transition={{ delay: 0.4 }}
                         className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light"
                     >
-                        <span className="text-white font-medium">Gemini 2.5 Flash</span> が、あなたの好きなアニメや<br className="hidden md:block" />
-                        今の気分にぴったりの名言を瞬時に探し出します。
+                        <span className="text-white font-medium">Gemini 2.5 Flash</span> が、<br className="md:hidden" />
+                        あなたの心に響く言葉を<br className="hidden md:block" />
+                        アニメ・偉人・映画から瞬時に探し出します。
                     </motion.p>
                 </header>
 
